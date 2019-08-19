@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Считывание значения из файла
-number=$(cat ./lines 2>/dev/null)
+number=$(cat ./lines 2>/dev/null);status=$?
 
 # Сколько строк в файле
 checkLines=$(wc ./access-4560-644067.log | awk '{print $1}')
@@ -21,7 +21,7 @@ then
     # все ошибки c момента последнего запуска
     errors=$(cat access-4560-644067.log | cut -d '"' -f3 | cut -d ' ' -f2 | sort | uniq -c | sort -rn)
     # Отправка почты
-    echo -e "Данные за период:$timeHead-$timeLast\n$IP" | mail -s "NGINX Log Info" root@localhost
+    echo -e "Данные за период:$timeHead-$timeLast\n$IP\n\n"Часто запрашиваемые адреса:"\n$addresses\n\n"Частые ошибки:"\n$errors" | mail -s "NGINX Log Info" root@localhost
 else
     # Дата начала и конца
     timeHead=$(awk '{print $4 $5}' access-4560-644067.log | sed 's/\[//; s/\]//' | sed -n "$(($number+1))"p)
